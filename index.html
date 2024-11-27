@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Estadio 2D</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .estadio {
+            width: 800px;
+            height: 600px;
+            margin: 20px auto;
+            position: relative;
+            background-color: #c0c0c0;
+            border: 2px solid black;
+        }
+
+        .campo {
+            width: 100%;
+            height: 100%;
+            background-color: #008000;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .grada {
+            width: 100px;
+            height: 50px;
+            position: absolute;
+            background-color: #0000FF;
+            cursor: pointer;
+        }
+
+        .zona-vip {
+            width: 120px;
+            height: 60px;
+            position: absolute;
+            top: 0;
+            left: 250px;
+            background-color: #FFD700;
+        }
+
+        /* Elementos adicionales (si se necesitan) */
+        .cartel {
+            width: 200px;
+            height: 50px;
+            position: absolute;
+            background-color: #FF4500;
+            top: 100px;
+            left: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="estadio">
+    <div class="campo"></div>
+    <div class="grada" id="grada1" style="top: 100px; left: 50px;">Grada 1</div>
+    <div class="grada" id="grada2" style="top: 200px; left: 50px;">Grada 2</div>
+    <div class="zona-vip">Zona VIP</div>
+    <div class="cartel">Cartel de Publicidad</div>
+</div>
+
+<script>
+    // Función para permitir mover los elementos con el mouse
+    let elementos = document.querySelectorAll('.grada, .zona-vip, .cartel');
+
+    elementos.forEach(elemento => {
+        elemento.onmousedown = function (e) {
+            let shiftX = e.clientX - elemento.getBoundingClientRect().left;
+            let shiftY = e.clientY - elemento.getBoundingClientRect().top;
+
+            document.body.appendChild(elemento);
+            elemento.style.position = 'absolute';
+            elemento.style.zIndex = 1000;
+
+            function moveAt(pageX, pageY) {
+                elemento.style.left = pageX - shiftX + 'px';
+                elemento.style.top = pageY - shiftY + 'px';
+            }
+
+            // Mover el elemento con el mouse
+            moveAt(e.pageX, e.pageY);
+
+            function onMouseMove(e) {
+                moveAt(e.pageX, e.pageY);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+
+            elemento.onmouseup = function () {
+                document.removeEventListener('mousemove', onMouseMove);
+                elemento.onmouseup = null;
+            };
+        };
+
+        elemento.ondragstart = function () {
+            return false;
+        };
+    });
+</script>
+
+</body>
+</html>
+
